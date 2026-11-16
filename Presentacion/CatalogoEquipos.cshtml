@@ -1,0 +1,57 @@
+@page
+@model ExamenReparaciones.Presentacion.CatalogoEquiposModel
+@{
+    ViewData["Title"] = "Equipos";
+    ViewData["Menu"] = "equipos";
+}
+
+<h2>Catalogo de Equipos</h2>
+<p>Agregar, modificar y borrar equipos. Cada equipo pertenece a un usuario.</p>
+
+@if (!string.IsNullOrEmpty(Model.Mensaje))
+{
+    <div class="mensaje @(Model.EsError ? "error" : "")">@Model.Mensaje</div>
+}
+
+<table class="grid">
+    <tr><th>EquipoID</th><th>TipoEquipo</th><th>Modelo</th><th>UsuarioID</th><th>Usuario</th><th></th></tr>
+    @foreach (var e in Model.Lista)
+    {
+        <tr>
+            <td>@e.EquipoID</td>
+            <td>@e.TipoEquipo</td>
+            <td>@e.Modelo</td>
+            <td>@e.UsuarioID</td>
+            <td>@(Model.Usuarios.FirstOrDefault(u => u.UsuarioID == e.UsuarioID)?.Nombre)</td>
+            <td><a href="?id=@e.EquipoID">Seleccionar</a></td>
+        </tr>
+    }
+</table>
+
+<form method="post">
+    <div class="formulario">
+        <label for="txtId">EquipoID:</label>
+        <input id="txtId" asp-for="Equipo.EquipoID" readonly placeholder="(automatico)" value="@(Model.Equipo.EquipoID == 0 ? "" : Model.Equipo.EquipoID)" />
+        <br />
+        <label for="txtTipo">TipoEquipo:</label>
+        <input id="txtTipo" asp-for="Equipo.TipoEquipo" />
+        <br />
+        <label for="txtModelo">Modelo:</label>
+        <input id="txtModelo" asp-for="Equipo.Modelo" />
+        <br />
+        <label for="ddlUsuario">Usuario:</label>
+        <select id="ddlUsuario" asp-for="Equipo.UsuarioID">
+            <option value="0">-- Seleccione --</option>
+            @foreach (var u in Model.Usuarios)
+            {
+                <option value="@u.UsuarioID">@u.UsuarioID - @u.Nombre</option>
+            }
+        </select>
+    </div>
+    <div class="botones">
+        <button type="submit" asp-page-handler="Agregar">Agregar</button>
+        <button type="submit" asp-page-handler="Actualizar">Actualizar</button>
+        <button type="submit" asp-page-handler="Eliminar" onclick="return confirm('¿Eliminar este equipo?');">Eliminar</button>
+        <a href="/CatalogoEquipos">Limpiar</a>
+    </div>
+</form>

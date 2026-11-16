@@ -1,0 +1,50 @@
+@page
+@model ExamenReparaciones.Presentacion.CatalogoUsuariosModel
+@{
+    ViewData["Title"] = "Usuarios";
+    ViewData["Menu"] = "usuarios";
+}
+
+<h2>Catalogo de Usuarios</h2>
+<p>Agregar, modificar y borrar usuarios. Use "Seleccionar" para cargar un registro en el formulario.</p>
+
+@if (!string.IsNullOrEmpty(Model.Mensaje))
+{
+    <div class="mensaje @(Model.EsError ? "error" : "")">@Model.Mensaje</div>
+}
+
+<table class="grid">
+    <tr><th>UsuarioID</th><th>Nombre</th><th>CorreoElectronico</th><th>Telefono</th><th></th></tr>
+    @foreach (var u in Model.Lista)
+    {
+        <tr>
+            <td>@u.UsuarioID</td>
+            <td>@u.Nombre</td>
+            <td>@u.CorreoElectronico</td>
+            <td>@u.Telefono</td>
+            <td><a href="?id=@u.UsuarioID">Seleccionar</a></td>
+        </tr>
+    }
+</table>
+
+<form method="post">
+    <div class="formulario">
+        <label for="txtId">UsuarioID:</label>
+        <input id="txtId" asp-for="Usuario.UsuarioID" readonly placeholder="(automatico)" value="@(Model.Usuario.UsuarioID == 0 ? "" : Model.Usuario.UsuarioID)" />
+        <br />
+        <label for="txtNombre">Nombre:</label>
+        <input id="txtNombre" asp-for="Usuario.Nombre" />
+        <br />
+        <label for="txtCorreo">Correo:</label>
+        <input id="txtCorreo" asp-for="Usuario.CorreoElectronico" type="email" />
+        <br />
+        <label for="txtTelefono">Telefono:</label>
+        <input id="txtTelefono" asp-for="Usuario.Telefono" />
+    </div>
+    <div class="botones">
+        <button type="submit" asp-page-handler="Agregar">Agregar</button>
+        <button type="submit" asp-page-handler="Actualizar">Actualizar</button>
+        <button type="submit" asp-page-handler="Eliminar" onclick="return confirm('¿Eliminar este usuario?');">Eliminar</button>
+        <a href="/CatalogoUsuarios">Limpiar</a>
+    </div>
+</form>
